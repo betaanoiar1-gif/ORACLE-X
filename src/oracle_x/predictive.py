@@ -26,3 +26,18 @@ def feature_power(features: pd.DataFrame, target: pd.Series, splits: int = 5) ->
                 pass
         rows.append({"feature": col, "oos_auc_mean": sum(aucs)/len(aucs) if aucs else float("nan"), "oos_auc_n": len(aucs)})
     return pd.DataFrame(rows).sort_values("oos_auc_mean", ascending=False)
+
+
+def calculate_predictive_power(features: pd.DataFrame, labels: pd.DataFrame, splits: int = 5) -> pd.DataFrame:
+    """Evaluate each feature against every directional target using time-series OOS AUC."""
+    results = []
+    target_cols = [c for c in labels.columns if c.startswith("direction_")]
+    if not target_cols:
+        raise ValueError("No directional targets found")
+    for target_col in target_cols:
+        table = feature_power(features, labels[target_col], splits=splits)
+        table["target"] = target_col
+        results.append(table)
+    return pd.concat(results, ignore_index=True).sort_values(
+        ["oos_auc_mean", "target"], ascending=[False, True]
+    ).reset_index(drop=True)
