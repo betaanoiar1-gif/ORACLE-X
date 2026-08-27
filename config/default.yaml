@@ -1,0 +1,17 @@
+project: ORACLE-X
+seed: 42
+research:
+  label_horizon_bars: 12
+  label_threshold: 0.0
+validation:
+  walk_forward_train_bars: 10000
+  walk_forward_test_bars: 2000
+  monte_carlo_simulations: 2000
+execution:
+  fee_rate: 0.0004
+  slippage_bps: 2.0
+  spread_bps: 1.0
+  funding_rate_per_bar: 0.0
+risk:
+  initial_capital: 100.0
+  max_risk_per_trade: 0.02
